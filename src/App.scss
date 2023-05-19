@@ -1,0 +1,42 @@
+@import "./styles/variables.scss";
+@font-face {
+    font-family: Montserrat;
+    src: url(../public/Montserrat-VariableFont_wght.ttf);
+}
+
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 62.5%;
+}
+
+body{
+    font-family: Montserrat, sans-serif;
+    overflow-x: hidden;
+    font-size: 2rem;
+    color: $font-color;
+    &::-webkit-scrollbar {
+        width: 15px;
+    }
+    &::-webkit-scrollbar-track {
+    background: white;
+        width: 15px;
+    }
+    &::-webkit-scrollbar-thumb {
+    background: $primary-color;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: black;
+    }
+}
+
+::selection {
+    border-radius: 5px;
+    background-color: $primary-color;
+    color: white;
+}

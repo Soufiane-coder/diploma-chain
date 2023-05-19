@@ -1,0 +1,36 @@
+@import "../../styles/variables.scss";
+.nav__bar{
+    position: fixed;
+    z-index: 1000;
+    padding: 0 $padding-nav;
+    height: $nav-height;
+    width: 100%;
+    background-color: $secondery-color3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    &--logo{
+        height:100%;
+    }
+    &--list{
+        display: inline;
+    }
+    &--item{
+        display: inline;
+        // background-color: red;
+        margin: 0 5rem 0 0rem;
+        text-transform: uppercase;
+        &:hover{
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        &:last-of-type{
+            border-radius: 10px;
+            margin: 0;
+            padding: 1rem 2rem;
+            color: white;
+            background-color: $font-color;
+        }
+    }
+}

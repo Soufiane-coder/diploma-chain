@@ -1,0 +1,25 @@
+@import "../../styles/variables.scss";
+
+.footer{
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: $secondery-color3;
+    height: $footer-height;
+
+    &--decore-left{
+        position:absolute;
+        z-index: 0;
+        background-color: $secondery-color4;
+        height: $footer-height;
+        width: 60%;
+        clip-path: polygon(0% 0%, 20% 70%, 100% 100%, 0% 100%);
+    }
+    &--decore-right{
+        position:absolute;
+        z-index: 0;
+        right: 0;
+        background-color: $secondery-color4;
+        height: $footer-height;
+        width: 13%;
+        clip-path: polygon(60% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+}

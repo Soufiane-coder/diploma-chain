@@ -1,0 +1,85 @@
+@import "../../../styles/variables.scss";
+
+.header{
+    padding: 0 $padding-header;
+    padding-top: $nav-height;
+    height: $header-height;
+    width: 100%;
+    background-color: $secondery-color3;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 0% 100%);
+    display: flex;
+    
+    &__description-general{
+        width: 50%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .header__big-title{
+            height: 55%;
+            width: 100%;
+            font-size: 8.5rem;
+            padding: 4rem;
+            &--primary-color{
+                color: $primary-color;
+            }
+            &--secondery-color{
+                color: $secondery-color1;
+            }
+            .header__bar{
+                border-radius: 10rem;
+                width: 22rem;
+                height: 1rem;
+                background-color:$secondery-color1;
+            }
+        }
+        
+        
+        .search-bar{
+            height: 20%;
+            width: 100%;
+            font-size: 3rem;
+            *{
+                border: none;
+            }
+            .search__field{
+                height: 7.6rem;
+                width: calc(100% - 17.6rem);
+                font-size: inherit;
+                border-radius: 30px 0 0 30px;
+                padding-left: 2rem;
+                box-shadow: -3px 3px 5px rgba(0, 0, 0, 0.2);
+                &::-webkit-search-cancel-button {
+                    -webkit-appearance: none;
+
+                    cursor: pointer;
+                    height: 5rem;
+                    width: 5rem;
+                    color: black;
+                    padding:0px;
+                    background-image: url("../../../asset/close.svg");
+                }
+                &:focus{
+                    outline: none;
+                    border: none;
+                }
+            }
+            .search__button{
+                height: 7.6rem;
+                width: 17.6rem;
+                background-color: $secondery-color2;
+                font-size: inherit;
+                color: white;
+                border-radius: 0 30px 30px 0;
+                box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+                &:hover{
+                    cursor: pointer;
+                }      
+            }
+        }
+    }
+    &__illustration{
+        padding: 5rem;
+        width: 50%;
+    }
+}
