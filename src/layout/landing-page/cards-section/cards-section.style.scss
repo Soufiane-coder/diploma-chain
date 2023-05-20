@@ -1,0 +1,6 @@
+@import "../../../styles/variables.scss";
+.cards-section{
+    padding: 8rem $padding-header;
+    display: flex;
+    justify-content: space-around;
+}
