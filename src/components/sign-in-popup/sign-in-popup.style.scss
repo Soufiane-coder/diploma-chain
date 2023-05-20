@@ -1,0 +1,63 @@
+@import "../../styles/variables.scss";
+
+.sign-in-popup{
+    position: absolute;
+    left: 10rem;
+    top: 150%;
+    width: 38rem;
+    min-height: 27rem;
+    border-radius: 1.7rem;
+    background-color: $secondery-color2;
+    padding: 1.5rem;
+    color: white;
+    &__title{
+        font-weight: 400;
+        text-align: center;
+    }
+    label{
+        margin: 1rem 0 0 0;
+        display: block;
+        font-weight: 300;
+        font-size: 1.6rem;
+    }
+    input[type="text"]{
+        width: 100%;
+        border: none;
+        padding: .2rem;
+        border-radius: .5rem;
+        font-size: 3.3rem;
+        color: $font-color;
+        &:focus{
+            outline: none;
+        }
+    }
+    input[type="submit"]{
+        margin: 1rem 0 0 0;
+        padding: 1rem;
+        border-radius: 10rem;
+        display: inline;
+        border: none;
+        background-color: white;
+        margin-left: auto;
+        font-family: inherit;
+        font-weight: 600;
+        &:hover{
+            cursor: pointer;
+        }
+    }
+    &__message{
+        font-size: 1.5rem;
+        display: inline;
+        margin-left: 1rem;
+    }
+    &__warning{
+        margin: 1rem 0 0 0;
+        display: block;
+        width: 100%;
+        font-weight: 600;
+        font-size: 1.5rem;
+        &--danger{
+            color: $danger-color;
+        }
+    }
+}
