@@ -1,0 +1,20 @@
+@import "../../../styles/variables.scss";
+.university-section{
+    background-color: $secondery-color3;
+    padding: $header-height/10 $header-padding;
+    display: flex;
+    align-items: center;
+    &__description{
+        width: 60%;
+        text-align: right;
+        font-family: inherit;
+        font-size: 5rem;
+    }
+    &__illustration{
+        display: inline;
+        width: 40%;
+    }
+    &__paragraphe{
+        font-size: 3rem;
+    }
+}

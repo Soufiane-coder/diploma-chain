@@ -35,6 +35,22 @@ body{
     }
 }
 
+.primary-color{
+    color: $primary-color;
+}
+.secondery-color1{
+    color: $secondery-color1;
+}
+.secondery-color2{
+    color: $secondery-color2;
+}
+.secondery-color3{
+    color: $secondery-color3;
+}
+.secondery-color4{
+    color: $secondery-color4;
+}
+
 ::selection {
     border-radius: 5px;
     background-color: $primary-color;

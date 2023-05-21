@@ -1,0 +1,22 @@
+@import "../../../styles/variables.scss";
+
+.morocco-section{
+    padding: 8rem $header-padding * 2.9;
+    &__diploma-chain{
+        font-size: 10rem;
+        display: flex;
+        justify-content: space-between;
+    }
+    .morocco-team{
+        display: flex;
+        justify-content: space-between;
+    }
+    &__moroccan-developed{
+        font-size: 10rem;
+        font-weight: 400;
+    }
+    &__flag-morocco{
+        width: 60rem;
+        max-width: 60rem;
+    }
+}
