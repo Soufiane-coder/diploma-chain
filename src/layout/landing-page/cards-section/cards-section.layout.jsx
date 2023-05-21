@@ -22,9 +22,6 @@ const cardsInformations = [
         description: "Vérifiez facilement l'existence et l'authenticité des diplômes"
     }
 ]
-
-console.log(cardsInformations);
-
 const CardSection = () => {
     return (
         <div className="cards-section">

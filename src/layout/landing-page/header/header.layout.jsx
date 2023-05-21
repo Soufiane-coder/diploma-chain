@@ -1,8 +1,9 @@
 import React from "react";
 import { ReactComponent as HeaderIllustration } from '../../../asset/header-illustration.svg';
+import SearchBar from "../../../components/search-bar/search-bar.component";
 import "./header.style.scss";
 
-const Header = () => {
+const Header = (props) => {
     return (
         <header className="header">
             <div className="header__description-general">
@@ -11,10 +12,7 @@ const Header = () => {
                     <div className="header__bar" />
                 </h1>
 
-                <div className="search-bar">
-                    <input className="search__field" placeholder="Taper le nom prenom ou CIN" type="search" name="" id="" />
-                    <button className="search__button">Chercher</button>
-                </div>
+                <SearchBar {...props} />
             </div>
             <div className="header__illustration">
                 <HeaderIllustration />

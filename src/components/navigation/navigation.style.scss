@@ -16,9 +16,14 @@
     &--list{
         display: inline;
     }
+
     &--item{
+        a, a:visited, a:link{
+            color: inherit;
+            text-decoration: inherit;
+        }
         display: inline;
-        // background-color: red;
+        text-decoration: none;
         margin: 0 5rem 0 0rem;
         text-transform: uppercase;
         &:hover{

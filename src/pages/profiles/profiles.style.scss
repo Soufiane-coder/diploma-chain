@@ -1,0 +1,11 @@
+@import "../../styles/variables.scss";
+
+.profile-page{
+    padding-top: $nav-height;
+    background-color: $secondery-color3;
+    text-align: center;
+    .search-bar{
+        display: inline-block;
+        margin: 5rem;
+    }
+}
