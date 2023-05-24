@@ -5,6 +5,9 @@ import Footer from './components/footer/footer.component';
 import LandingPage from './pages/landing-page/landing-page.pages';
 import { useState } from 'react';
 import ProfilePage from './pages/profiles/profiles.page';
+import "./firebase/firebase.utils";
+import WorkbranchPage from './pages/workbranch/workbranch.page';
+
 function App() {
   const [showSignInPopup, setShowSignInPopup] = useState(false);
   const [searchField, setSearchField] = useState("");
@@ -22,6 +25,7 @@ function App() {
           searchField={searchField}
           setSearchField={setSearchField}
         />} />
+        <Route path="/workbranch" element={<WorkbranchPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

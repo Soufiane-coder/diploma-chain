@@ -1,7 +1,14 @@
 import React from "react";
 import "./sign-in-popup.style.scss";
+import "../../firebase/firebase.utils";
+import { connect } from "react-redux";
+import { signInWithEmailAndPasswordAuthed } from "../../firebase/firebase.utils";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { setCurrentUser } from "../../redux/user/user.actions";
+import { createStructuredSelector } from "reselect";
 
-const SignInPopup = ({ form, setForm }) => {
+const SignInPopup = ({ form, setForm, currentUser, setCurrentUser }) => {
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setForm({ ...form, [name]: value });
@@ -10,7 +17,9 @@ const SignInPopup = ({ form, setForm }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(event);
+        signInWithEmailAndPasswordAuthed(form.identifiant, form.password)
+            .then((cred) => setCurrentUser(cred))
+            .catch((err) => console.log(err.message));
     }
 
     return (
@@ -33,4 +42,13 @@ const SignInPopup = ({ form, setForm }) => {
     )
 }
 
-export default SignInPopup;
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser
+})
+
+const mapDispatchToProps = dispatch => ({
+    setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignInPopup);
