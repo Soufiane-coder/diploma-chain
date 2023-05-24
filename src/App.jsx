@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import './App.scss';
 import Navigation from './components/navigation/navigation.component';
 import Footer from './components/footer/footer.component';
@@ -7,8 +7,11 @@ import { useState } from 'react';
 import ProfilePage from './pages/profiles/profiles.page';
 import "./firebase/firebase.utils";
 import WorkbranchPage from './pages/workbranch/workbranch.page';
+import { selectCurrentUser } from './redux/user/user.selectors';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
-function App() {
+function App({ currentUser }) {
   const [showSignInPopup, setShowSignInPopup] = useState(false);
   const [searchField, setSearchField] = useState("");
   return (
@@ -25,11 +28,15 @@ function App() {
           searchField={searchField}
           setSearchField={setSearchField}
         />} />
-        <Route path="/workbranch" element={<WorkbranchPage />} />
+        <Route path="/workbranch" element={currentUser ? <WorkbranchPage /> : <Navigate to="/" replace />} />
       </Routes>
       <Footer />
     </BrowserRouter>
   );
 }
 
-export default App;
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
+})
+
+export default connect(mapStateToProps)(App);

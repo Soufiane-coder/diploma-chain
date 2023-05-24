@@ -31,11 +31,15 @@ const Navigation = ({ showSignInPopup, setShowSignInPopup, currentUser, setCurre
                     <Link to="/" >acceuil</Link>
                 </li>
                 {
-                    currentUser ? <li className="nav__bar--item" onClick={handleSignOut}>
-                        se deconnecter
-                    </li> : <li className="nav__bar--item" onClick={() => { setShowSignInPopup(!showSignInPopup) }}>
-                        se connecter
-                    </li>
+                    currentUser ?
+                        <>
+                            <li className="nav__bar--item"><Link to="/workbranch" >branche de travaille</Link></li>
+                            <li className="nav__bar--item" onClick={handleSignOut}>
+                                se deconnecter
+                            </li>
+                        </> : <li className="nav__bar--item" onClick={() => { setShowSignInPopup(!showSignInPopup) }}>
+                            se connecter
+                        </li>
                 }
                 {
                     showSignInPopup && !currentUser ? <SignInPopup form={form} setForm={setForm} /> : null

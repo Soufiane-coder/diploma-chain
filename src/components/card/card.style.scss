@@ -39,7 +39,7 @@
         border:none;
         color: $font-color;
         box-shadow: .2rem .4rem #023c48;
-        transition: transform .1s;
+        transition: all .1s;
         &:hover{
             cursor: pointer;
             transform:translate(0,-.1rem);

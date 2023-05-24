@@ -50,6 +50,12 @@ body{
 .secondery-color4{
     color: $secondery-color4;
 }
+.bg-danger-color{
+    background-color: $danger-color;
+}
+.bg-edit-color{
+    background-color: $edit-color;
+}
 
 ::selection {
     border-radius: 5px;

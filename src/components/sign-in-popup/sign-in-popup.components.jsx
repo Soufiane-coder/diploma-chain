@@ -18,8 +18,9 @@ const SignInPopup = ({ form, setForm, currentUser, setCurrentUser }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         signInWithEmailAndPasswordAuthed(form.identifiant, form.password)
-            .then((cred) => setCurrentUser(cred))
+            .then((cred) => { setCurrentUser(cred); window.location.href = '/workbranch'; })
             .catch((err) => console.log(err.message));
+
     }
 
     return (
