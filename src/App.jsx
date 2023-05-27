@@ -10,13 +10,18 @@ import WorkbranchPage from './pages/workbranch/workbranch.page';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import ProfileEditMode from './pages/profile-edit-mode/profile-edit-mode.page';
 
 function App({ currentUser }) {
+  document.addEventListener('scroll', () => {
+    setNavChanged(!window.pageYOffset)
+  })
+  const [navChanged, setNavChanged] = useState(true);
   const [showSignInPopup, setShowSignInPopup] = useState(false);
   const [searchField, setSearchField] = useState("");
   return (
     <BrowserRouter>
-      <Navigation showSignInPopup={showSignInPopup} setShowSignInPopup={setShowSignInPopup} />
+      <Navigation navChanged={navChanged} showSignInPopup={showSignInPopup} setShowSignInPopup={setShowSignInPopup} />
       <Routes >
         <Route path="/" element={<LandingPage
           setShowSignInPopup={setShowSignInPopup}
@@ -29,6 +34,7 @@ function App({ currentUser }) {
           setSearchField={setSearchField}
         />} />
         <Route path="/workbranch" element={currentUser ? <WorkbranchPage /> : <Navigate to="/" replace />} />
+        <Route path="/profile-edit-mode" element={<ProfileEditMode />} />
       </Routes>
       <Footer />
     </BrowserRouter>

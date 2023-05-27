@@ -10,7 +10,8 @@ import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { signOutAuthed } from "../../firebase/firebase.utils";
 import { setCurrentUser } from "../../redux/user/user.actions";
 
-const Navigation = ({ showSignInPopup, setShowSignInPopup, currentUser, setCurrentUser }) => {
+const Navigation = ({ showSignInPopup, setShowSignInPopup, currentUser, setCurrentUser, navChanged }) => {
+
     const [form, setForm] = useState({
         identifiant: "",
         password: ""
@@ -24,7 +25,7 @@ const Navigation = ({ showSignInPopup, setShowSignInPopup, currentUser, setCurre
             .catch((err) => console.log(err.message));
     }
     return (
-        <nav className="nav__bar">
+        <nav className="nav__bar" style={!navChanged ? { backgroundColor: "#fbc86f" } : null}>
             <Link to="/" className="nav__bar--logo"><img src={logoDiplomaChain} alt="diploma chain" className="nav__bar--logo" /></Link>
             <ul className="nav__bar--list" style={{ position: "relative" }}>
                 <li className="nav__bar--item">

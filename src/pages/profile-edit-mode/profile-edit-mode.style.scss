@@ -1,0 +1,139 @@
+@import "../../styles/variables.scss";
+
+.profile-edit-mode{
+    min-height: 100rem;
+    background-color: $secondery-color3;
+    padding: $nav-height $header-padding $header-padding;
+    .button-section{
+        padding: 2rem 0;
+        text-align: right;
+        button{
+            margin-left: 3rem;
+            svg{
+                fill: white;
+                height: 4rem;
+            }
+        }
+    }
+    .profile{
+        &__header{
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            padding-bottom: 4rem;
+            border-bottom: 1px solid $font-color;
+            .img-section{
+                text-align: center;
+                height: 45rem;
+                width: 45rem;
+                border-right: 1px solid $font-color;
+                img{
+                    max-width: calc(100% - 6rem);
+                }
+            }
+            // .upload-button{
+            //     margin-top:calc(100% - 6rem);
+            // }
+            #upload-image{
+                display: none;
+            }
+            .description-personel{
+                width: calc(100% - 45rem);
+                min-width: 50rem; // the minimum width to wrap the header
+                &__titre{
+                    padding-left: 2.5rem;
+                    padding-bottom: 2rem;
+                }
+                .informations{
+                    display: flex;
+                    padding-left: 2rem;
+                    font-size: 3rem;
+                }
+                
+                &__labels{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    width: 30%;
+                    label{
+                        font-size: inherit;
+                        padding: .5rem; // inside the inputs there is padding .5rem
+                        &:not(:last-of-type){
+                            margin-bottom: 1rem;
+                        }
+                    }
+                }
+                &__inputs{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    width: 70%;
+                    input{
+                        &:not(:last-of-type){
+                            margin-bottom: 1rem;
+                        }
+                        padding: .5rem;
+                        font-size: inherit;
+                        &:focus{
+                            outline: none;
+                        }
+                    }
+                    .radio-container {
+                        display: flex;
+                        justify-content: space-around;
+                        min-height: 4.76rem;
+                        .radio-wrapper{
+                            display: inline-flex;
+                        }
+                        .radio-button {
+                        display: inline;
+                        align-items: center;
+                        cursor: pointer;
+                        transition: all 0.2s ease-in-out;
+                        &:hover{
+                            transform: translateY(-2px);
+                        }
+                      }
+                      
+                      
+                      
+                      .radio-button input[type="radio"] {
+                        display: none;
+                      }
+                      
+                      .radio-checkmark {
+                        display: inline-block;
+                        position: relative;
+                        width: 16px;
+                        height: 16px;
+                        margin-right: 10px;
+                        border: 2px solid #333;
+                        border-radius: 50%;
+                      }
+                      
+                      .radio-checkmark:before {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0);
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background-color: #333;
+                        transition: all 0.2s ease-in-out;
+                      }
+                      
+                      .radio-button input[type="radio"]:checked ~ .radio-checkmark:before {
+                        transform: translate(-50%, -50%) scale(1);
+                      }
+                    }
+                      
+
+                      
+                }
+                
+            }
+        }
+    }
+}

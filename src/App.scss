@@ -20,6 +20,7 @@ body{
     overflow-x: hidden;
     font-size: 2rem;
     color: $font-color;
+    scroll-behavior:smooth;
     &::-webkit-scrollbar {
         width: 15px;
     }
@@ -64,6 +65,9 @@ body{
 }
 
 .btn-background{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     background-color: $font-color;
     color: white;
     padding: 1rem;
@@ -75,6 +79,7 @@ body{
     box-shadow: .2rem .2rem 0px #6c6c6c;
     &:hover{
         text-decoration: underline;
+        cursor: pointer;
     }
     &:active{
         box-shadow: 0px 0px 0px #6c6c6c;

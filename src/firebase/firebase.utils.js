@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import {getFirestore, collection, getDocs} from "firebase/firestore";
+import {getFirestore, collection, getDocs, deleteDoc, doc} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -33,4 +33,15 @@ export const getStudents = async (userId) => {
       student.id = doc.id;
       return student;
     })
+}
+
+// deleting documents
+
+export const deleteStudent = (userId, studentId) => {
+  const docRef = doc(db, `users/${userId}/students`, studentId);
+  deleteDoc(docRef)
+    .then((res) => {
+      console.log(res, "deleted");
+    })
+    .catch((err) => console.error(err.message));
 }
