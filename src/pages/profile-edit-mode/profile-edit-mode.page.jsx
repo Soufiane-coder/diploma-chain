@@ -7,12 +7,17 @@ import { ReactComponent as Add } from '../../asset/add.svg';
 
 import User from '../../image/user.png';
 const ProfileEditMode = () => {
-    const [profile, setProfile] = useState({ semester: [] });
+    const [profile, setProfile] = useState(null);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(event)
     }
+
+    const handleAddingSemester = () => {
+
+    }
+
     return (
         <form className="profile-edit-mode" onSubmit={handleSubmit}>
             <div className="button-section">
@@ -69,7 +74,7 @@ const ProfileEditMode = () => {
                 </div>
                 <div className="profile__notes">
                     <SemesterContainer />
-                    <button type="button" className="add-semester btn-background">
+                    <button type="button" className="add-semester btn-background" onClick={handleAddingSemester}>
                         <Add />Ajouter semestre
                     </button>
                 </div>
