@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./profile-edit-mode.style.scss";
+import SemesterContainer from '../../components/semester-container/semester-container.component';
 import { ReactComponent as Check } from '../../asset/check.svg';
 import { ReactComponent as Close } from '../../asset/close.svg';
+import { ReactComponent as Add } from '../../asset/add.svg';
+
 import User from '../../image/user.png';
 const ProfileEditMode = () => {
+    const [profile, setProfile] = useState({ semester: [] });
+
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(event)
@@ -34,11 +39,11 @@ const ProfileEditMode = () => {
                                 <label htmlFor="genre">Genre:</label>
                             </div>
                             <div className="description-personel__inputs">
-                                <input id="last-name" type="text" />
-                                <input id="first-name" type="text" />
-                                <input id="cin" type="text" />
-                                <input id="cne" type="text" />
-                                <input id="apogée" type="text" />
+                                <input id="last-name" type="text" className='forme-input-text' />
+                                <input id="first-name" type="text" className='forme-input-text' />
+                                <input id="cin" type="text" className='forme-input-text' />
+                                <input id="cne" type="text" className='forme-input-text' />
+                                <input id="apogée" type="text" className='forme-input-text' />
                                 <div className="radio-container">
                                     <div className="radio-wrapper">
                                         <label className="radio-button">
@@ -56,11 +61,17 @@ const ProfileEditMode = () => {
                                         </label>
                                     </div>
                                 </div>
-                                <input id="apogée" type="text" />
+                                <input id="apogée" type="text" className='forme-input-text' />
                             </div>
                         </div>
 
                     </div>
+                </div>
+                <div className="profile__notes">
+                    <SemesterContainer />
+                    <button type="button" className="add-semester btn-background">
+                        <Add />Ajouter semestre
+                    </button>
                 </div>
             </div>
             <div className="button-section">

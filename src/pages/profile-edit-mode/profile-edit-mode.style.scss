@@ -1,6 +1,16 @@
 @import "../../styles/variables.scss";
 
 .profile-edit-mode{
+    .forme-input-text{
+        padding: .5rem;
+        font-size: inherit;
+        &:not(:last-of-type){
+            margin-bottom: 1rem;
+        }
+        &:focus{
+            outline: none;
+        } 
+    }
     min-height: 100rem;
     background-color: $secondery-color3;
     padding: $nav-height $header-padding $header-padding;
@@ -31,9 +41,6 @@
                     max-width: calc(100% - 6rem);
                 }
             }
-            // .upload-button{
-            //     margin-top:calc(100% - 6rem);
-            // }
             #upload-image{
                 display: none;
             }
@@ -68,16 +75,7 @@
                     flex-direction: column;
                     justify-content: space-between;
                     width: 70%;
-                    input{
-                        &:not(:last-of-type){
-                            margin-bottom: 1rem;
-                        }
-                        padding: .5rem;
-                        font-size: inherit;
-                        &:focus{
-                            outline: none;
-                        }
-                    }
+                    
                     .radio-container {
                         display: flex;
                         justify-content: space-around;
@@ -133,6 +131,19 @@
                       
                 }
                 
+            }
+        }
+        &__notes{
+            font-size: 3rem;
+            .add-semester{
+                margin-top: 1rem;
+                display: flex;
+                margin-left: auto;
+                padding: .2rem 1rem;
+                svg{
+                    fill: white;
+                    width: 4rem;
+                }
             }
         }
     }
