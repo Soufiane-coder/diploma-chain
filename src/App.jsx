@@ -34,7 +34,7 @@ function App({ currentUser }) {
           setSearchField={setSearchField}
         />} />
         <Route path="/workbranch" element={currentUser ? <WorkbranchPage /> : <Navigate to="/" replace />} />
-        <Route path="/profile-edit-mode" element={<ProfileEditMode />} />
+        <Route path="/profile-edit-mode/:studentId" element={<ProfileEditMode />} />
       </Routes>
       <Footer />
     </BrowserRouter>

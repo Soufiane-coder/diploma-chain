@@ -1,21 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import "./profile-edit-mode.style.scss";
 import SemesterContainer from '../../components/semester-container/semester-container.component';
 import { ReactComponent as Check } from '../../asset/check.svg';
 import { ReactComponent as Close } from '../../asset/close.svg';
 import { ReactComponent as Add } from '../../asset/add.svg';
-
 import User from '../../image/user.png';
-const ProfileEditMode = () => {
-    const [profile, setProfile] = useState(null);
+import { useParams } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
+import { selectStudentProfileList } from '../../redux/students-profile/students-profile.selectors';
+import { connect } from 'react-redux';
+import { addSemesterToStudentProfileList } from '../../redux/students-profile/students-profile.action';
+import { selectSemesters } from '../../redux/students-profile/students-profile.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { selectStudent } from '../../redux/students-profile/students-profile.selectors';
+import { changeAttribut } from '../../redux/students-profile/students-profile.action';
+
+const ProfileEditMode = ({ selectStudentProfileList, addSemesterToStudentProfileList, selectSemesters, selectCurrentUser, selectStudent, changeAttribut }) => {
+    const params = useParams();
+    useEffect(() => {
+        // addSemesterToStudentProfileList(params.studentId);
+        // console.log("semester", selectStudentProfileList.find(item => item.studentId === params.studentId));
+
+    }, []);
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(event)
+        // console.log("semesters", selectStudentProfileList.find(item => item.studentId === params.studentId).semesters);
+        // console.log(selectStudentProfileList);
+        // console.log(event)
     }
 
     const handleAddingSemester = () => {
+        addSemesterToStudentProfileList(params.studentId);
+        // console.log(semester);
+    }
 
+    const handleChange = (event) => {
+        const { name: attributeName, value: newAttributeValue } = event.target;
+        changeAttribut(params.studentId, attributeName, newAttributeValue);
     }
 
     return (
@@ -44,7 +67,7 @@ const ProfileEditMode = () => {
                                 <label htmlFor="genre">Genre:</label>
                             </div>
                             <div className="description-personel__inputs">
-                                <input id="last-name" type="text" className='forme-input-text' />
+                                <input id="last-name" name="nom" type="text" className='forme-input-text' value={selectStudent(params.studentId).nom} onChange={handleChange} />
                                 <input id="first-name" type="text" className='forme-input-text' />
                                 <input id="cin" type="text" className='forme-input-text' />
                                 <input id="cne" type="text" className='forme-input-text' />
@@ -73,7 +96,11 @@ const ProfileEditMode = () => {
                     </div>
                 </div>
                 <div className="profile__notes">
-                    <SemesterContainer />
+                    {
+                        selectSemesters(params.studentId)?.map(item => (
+                            <SemesterContainer studentId={params.studentId} key={item.semester} semesterNum={item.semester} />
+                        ))
+                    }
                     <button type="button" className="add-semester btn-background" onClick={handleAddingSemester}>
                         <Add />Ajouter semestre
                     </button>
@@ -87,4 +114,17 @@ const ProfileEditMode = () => {
     )
 }
 
-export default ProfileEditMode;
+const mapStateToProps = createStructuredSelector({
+    selectStudentProfileList: selectStudentProfileList,
+    selectSemesters: selectSemesters,
+    selectCurrentUser: selectCurrentUser,
+    selectStudent: selectStudent
+})
+
+const mapDispatchToProps = dispatch => ({
+    // addStudentToList: students => dispatch(addStudentToList(students)),
+    addSemesterToStudentProfileList: student => dispatch(addSemesterToStudentProfileList(student)),
+    changeAttribut: (studentId, attributeName, newAttributeValue) => dispatch(changeAttribut(studentId, attributeName, newAttributeValue))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileEditMode);

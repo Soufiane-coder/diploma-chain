@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import {getFirestore, collection, getDocs, deleteDoc, doc} from "firebase/firestore";
+import {getFirestore, collection, getDocs, deleteDoc, doc, getDoc} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,16 +24,43 @@ export const signOutAuthed = () => signOut(auth);
 
 export const signInWithEmailAndPasswordAuthed = (email, password) => signInWithEmailAndPassword(auth, email, password);
 
-export const getStudents = async (userId) => {
-  const colRef = collection(db, `users/${userId}/students`);
-    // get collection data
-    let snapshot = await getDocs(colRef);
+const getDocPers = async (colRef, typeOfId) => {
+  let snapshot = await getDocs(colRef);
     return snapshot.docs.map((doc) => {
       const student = doc.data();
-      student.id = doc.id;
+      student[typeOfId] = doc.id;
       return student;
     })
 }
+
+
+export const getModules = async (userId, studentId, semesterId) => {
+  const colRef = collection(db, `users/${userId}/studentProfileList/${studentId}/semesters/${semesterId}/modules`);
+    // get collection data
+    return await getDocPers(colRef, 'id');
+}
+
+
+export const getSemesters = async (userId, studentId) => {
+  const colRef = collection(db, `users/${userId}/studentProfileList/${studentId}/semesters`);
+    // get collection data
+    return await getDocPers(colRef, 'semester');
+}
+
+
+export const getStudents = async (userId) => {
+  const colRef = collection(db, `users/${userId}/studentProfileList`);
+    // get collection data
+    const students = await getDocPers(colRef, 'studentId');
+    students.forEach(async student => {
+      student.semesters = await getSemesters(userId, student.studentId);
+      student.semesters.forEach(async semester => {
+          semester.modules = await getModules(userId, student.studentId, semester.semester);
+      })
+  })
+  return students;
+}
+
 
 // deleting documents
 

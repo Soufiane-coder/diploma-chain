@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./workbranch.style.scss";
 import { ReactComponent as Add } from "../../asset/add.svg";
 import { createStructuredSelector } from "reselect";
@@ -7,27 +7,32 @@ import { getStudents, deleteStudent } from "../../firebase/firebase.utils";
 import { connect } from "react-redux";
 import { ReactComponent as Delete } from '../../asset/delete.svg';
 import { ReactComponent as Checked } from '../../asset/check.svg';
-import { setStudentList } from '../../redux/students/students.actions';
-import { selectStudentList } from '../../redux/students/students.selectors';
+
+import { setStudentList } from '../../redux/students-profile/students-profile.action';
+import { selectStudentProfileList } from '../../redux/students-profile/students-profile.selectors';
+
 import { useNavigate } from "react-router-dom";
 
-const WorkbranchPage = ({ currentUser, setStudentList, selectStudentList }) => {
+const WorkbranchPage = ({ selectCurrentUser, setStudentList, selectStudentList }) => {
     const navigate = useNavigate();
+
     useEffect(() => {
         const studentInformations = async () => {
-            const students = await getStudents(currentUser.user.uid);
+            const students = await getStudents(selectCurrentUser.user.uid);
             setStudentList(students);
         }
         studentInformations();
     }, []);
+
     const handleDelete = (event) => {
         if (!window.confirm("Est ce que vous voulez vraiment supprimer cet élement")) return;
         const { id: studentId } = event.target.closest('.workbranch-page__item');
-        deleteStudent(currentUser.user.uid, studentId);
+        deleteStudent(selectCurrentUser.user.uid, studentId);
     }
 
-    const HandleEdit = () => {
-        navigate('/profile-edit-mode')
+    const HandleEdit = (event) => {
+        const { id } = event.target.closest('.workbranch-page__item');
+        navigate('/profile-edit-mode/' + id);
     }
 
     return (
@@ -47,8 +52,8 @@ const WorkbranchPage = ({ currentUser, setStudentList, selectStudentList }) => {
                     !selectStudentList ? <h1>Loading</h1> :
                         selectStudentList.length === 0 ? <div>Il n y'a pas d'étudiant</div> :
                             selectStudentList.map(student => {
-                                return <div className="workbranch-page__item" key={student.id} id={student.id}>
-                                    <p>{student.nom} {student.prenom}</p>
+                                return <div className="workbranch-page__item" key={student.studentId} id={student.studentId}>
+                                    <p>{student.nom} {student.prénom}</p>
                                     <p>{student.cin}</p>
                                     <p>{student.cne}</p>
                                     <p>{student.apogée}</p>
@@ -65,8 +70,8 @@ const WorkbranchPage = ({ currentUser, setStudentList, selectStudentList }) => {
 }
 
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser,
-    selectStudentList: selectStudentList
+    selectCurrentUser: selectCurrentUser,
+    selectStudentList: selectStudentProfileList
 })
 
 const mapDispatchToProps = dispatch => ({
