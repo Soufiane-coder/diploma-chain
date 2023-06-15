@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import {getFirestore, collection, getDocs, deleteDoc, doc, getDoc} from "firebase/firestore";
+import {getFirestore, collection, getDocs, deleteDoc, doc, updateDoc, addDoc} from "firebase/firestore";
+import {getDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -34,31 +35,35 @@ const getDocPers = async (colRef, typeOfId) => {
 }
 
 
-export const getModules = async (userId, studentId, semesterId) => {
-  const colRef = collection(db, `users/${userId}/studentProfileList/${studentId}/semesters/${semesterId}/modules`);
-    // get collection data
-    return await getDocPers(colRef, 'id');
-}
+// export const getModules = async (userId, studentId, semesterId) => {
+//   const colRef = collection(db, `users/${userId}/studentProfileList/${studentId}/semesters/${semesterId}/modules`);
+//     // get collection data
+//     try{
+//       return await getDocPers(colRef, 'id');
+//     }catch(err){
+//       console.error(err.message);
+//       return null;
+//     }
+// }
 
 
-export const getSemesters = async (userId, studentId) => {
-  const colRef = collection(db, `users/${userId}/studentProfileList/${studentId}/semesters`);
-    // get collection data
-    return await getDocPers(colRef, 'semester');
-}
+// export const getSemesters = async (userId, studentId) => {
+//   const colRef = collection(db, `users/${userId}/studentProfileList/${studentId}/semesters`);
+//     // get collection data
+//     try{
+//       return await getDocPers(colRef, 'semester');
+//     }catch(err){
+//       console.error(err.message);
+//       return null;
+//     }
+// }
 
 
 export const getStudents = async (userId) => {
   try{
     const colRef = collection(db, `users/${userId}/studentProfileList`);
     // get collection data
-      const students = await getDocPers(colRef, 'studentId');
-      students.forEach(async student => {
-        student.semesters = await getSemesters(userId, student.studentId);
-        student.semesters.forEach(async semester => {
-            semester.modules = await getModules(userId, student.studentId, semester.semester);
-        })})
-        return students;
+      return await getDocPers(colRef, 'studentId');
     }catch(err){
       console.error(err.message);
       return null;
@@ -69,11 +74,34 @@ export const getStudents = async (userId) => {
 
 // deleting documents
 
-export const deleteStudent = (userId, studentId) => {
+export const deleteStudent = async (userId, studentId) => {
   const docRef = doc(db, `users/${userId}/students`, studentId);
-  deleteDoc(docRef)
-    .then((res) => {
-      console.log(res, "deleted");
-    })
-    .catch((err) => console.error(err.message));
+  try{
+    await deleteDoc(docRef);
+  }catch(err){
+    console.error(err.message);
+  }
+}
+
+export const updatingName = async (userId, studentId, updatedProfile) => {
+// updating a document
+  const docRef = doc(db, `users/${userId}/studentProfileList/`, studentId);
+  try{
+    await updateDoc(docRef, updatedProfile);
+  }catch(err){
+    console.error(err.message);
+  }
+}
+
+export const addProfile = async (userId, newProfile) => {
+  // collection ref
+  const colRef = collection(db, `users/${userId}/studentProfileList/`);
+  // adding collection data
+  try{
+    const res = await addDoc(colRef, newProfile);
+    const docRef = doc(db, `users/${userId}/studentProfileList/`, res.id);
+    await updateDoc(docRef, {...newProfile, studentId: res.id}); // update the studentId attribute from "" to the its value
+  }catch(err){
+    console.error(err.message);
+  }
 }

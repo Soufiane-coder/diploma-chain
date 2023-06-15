@@ -24,6 +24,7 @@ const WorkbranchList = ({ selectCurrentUser, selectStudentList }) => {
         const { id } = event.target.closest('.workbranch-page__item');
         navigate('/profile-edit-mode/' + id);
     }
+
     return (<div className="workbranch-page__list">
         {
             selectStudentList.length === 0 ? <div>Il n y'a pas d'étudiant</div> :

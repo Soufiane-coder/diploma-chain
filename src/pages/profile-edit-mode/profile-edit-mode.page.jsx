@@ -9,22 +9,26 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { selectStudentProfileList } from '../../redux/students-profile/students-profile.selectors';
 import { connect } from 'react-redux';
-import { setStudentList } from '../../redux/students-profile/students-profile.action';
+import { addStudentToList, setStudentList } from '../../redux/students-profile/students-profile.action';
 import { selectSemesters } from '../../redux/students-profile/students-profile.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { selectStudent } from '../../redux/students-profile/students-profile.selectors';
 import withLoading from '../../components/with-loading/with-loading';
 import _ from 'lodash';
+import { addProfile, updatingName } from '../../firebase/firebase.utils';
 
-const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentList }) => {
+const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentList, selectCurrentUser, addStudentToList }) => {
     const params = useParams();
     const navigate = useNavigate();
+    const isAddingPage = Object.keys(params).length === 0;
 
-    const [studentProfile, setStudentProfile] = useState(_.cloneDeep(selectStudent(params.studentId)));
+    const initialStudent = isAddingPage ? { studentId: "", cin: "", cne: "", apogée: "", nom: "", prénom: "", semesters: [{ modules: [{ id: 1, moduleName: "", note: "" }], semester: 1 }] } : _.cloneDeep(selectStudent(params.studentId));
+
+    const [studentProfile, setStudentProfile] = useState(initialStudent);
 
     useEffect(() => {
         setTimeout(() => {
-            setStudentProfile(_.cloneDeep(selectStudent(params.studentId)))
+            setStudentProfile(initialStudent);
         }, 1000); // this has to change
     }, [])
 
@@ -34,6 +38,7 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
             studentProfile.semesters.push({ semester: 1, modules: [] })
             setStudentProfile({ ...studentProfile });
         }
+        console.log(studentProfile);
     }, [studentProfile]);
 
 
@@ -42,24 +47,34 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         const index = selectStudentProfileList.indexOf(selectStudent(params.studentId));
         selectStudentProfileList[index] = { ...studentProfile }
         setStudentList([...selectStudentProfileList]);
+
+        if (isAddingPage) {
+            addProfile(selectCurrentUser.user.uid, studentProfile);
+            addStudentToList(studentProfile);
+        }
+        else {
+            updatingName(selectCurrentUser.user.uid, studentProfile.studentId, studentProfile);
+        }
         navigate('/workbranch');
         alert("succés");
-
     }
 
     const handleAddingSemester = () => {
-
+        setStudentProfile({ ...studentProfile, semesters: [...studentProfile.semesters, { semester: studentProfile.semesters.length + 1, modules: [] }] })
+        console.log(studentProfile);
     }
 
     const handleChange = (event) => {
         const { name: attributeName, value: newAttributeValue } = event.target;
         setStudentProfile({ ...studentProfile, [attributeName]: newAttributeValue });
     }
+
     const handleCancel = (event) => {
         event.preventDefault();
-        if (!window.confirm("voutre informations de ce profile va être pérdu, tu veux continuer l'annulation")) return
+        if (!window.confirm("votre informations de ce profile va être pérdu, tu veux continuer l'annulation")) return;
         navigate('/workbranch');
     }
+
 
     return (
         <form className="profile-edit-mode" onSubmit={handleSubmit}>
@@ -125,10 +140,9 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
                                 {...{
                                     studentId: params.studentId,
                                     key: item.semester,
-                                    semesterNum: item.semester,
                                     studentProfile,
                                     setStudentProfile,
-                                    semesterId: item.semester
+                                    semesterNum: item.semester
                                 }}
                             />
                         ))
@@ -155,7 +169,8 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const mapDispatchToProps = dispatch => ({
-    setStudentList: studentList => dispatch(setStudentList(studentList))
+    setStudentList: studentList => dispatch(setStudentList(studentList)),
+    addStudentToList: student => dispatch(addStudentToList(student))
 })
 
 export default withLoading(connect(mapStateToProps, mapDispatchToProps)(ProfileEditMode));

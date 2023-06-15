@@ -5,9 +5,9 @@ import { createStructuredSelector } from "reselect";
 import { selectModules } from "../../redux/students-profile/students-profile.selectors";
 import { connect } from "react-redux";
 
-const SemesterContainer = ({ semesterNum, selectModules, studentId, studentProfile, setStudentProfile, semesterId }) => {
+const SemesterContainer = ({ semesterNum, selectModules, studentId, studentProfile, setStudentProfile }) => {
 
-    const [moduleCollection, setModuleCollection] = useState(studentProfile.semesters[0].modules)
+    const [moduleCollection, setModuleCollection] = useState(studentProfile.semesters[+semesterNum - 1].modules)
 
     const addModuleToSemester = () => {
         // const semesters = 
@@ -21,7 +21,7 @@ const SemesterContainer = ({ semesterNum, selectModules, studentId, studentProfi
     }, []);
 
     useEffect(() => {
-        studentProfile.semesters[0].modules = moduleCollection;
+        studentProfile.semesters[+semesterNum - 1].modules = moduleCollection;
     }, [moduleCollection])
 
     const handleChange = (event) => {

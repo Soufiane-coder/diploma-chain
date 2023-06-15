@@ -15,6 +15,7 @@ import { getStudents } from './firebase/firebase.utils';
 import { setStudentList } from './redux/students-profile/students-profile.action';
 import { EthProvider } from "./contexts/EthContext";
 import ContractBtns from './components/test-blockchain/ContractBtns';
+
 function App({ selectCurrentUser, setStudentList }) {
 
   useEffect(() => {
@@ -28,31 +29,30 @@ function App({ selectCurrentUser, setStudentList }) {
   document.addEventListener('scroll', () => {
     setNavChanged(!window.pageYOffset)
   })
+
   const [navChanged, setNavChanged] = useState(true);
   const [showSignInPopup, setShowSignInPopup] = useState(false);
   const [searchField, setSearchField] = useState("");
   return (
     <BrowserRouter>
-      <EthProvider>
-        <Navigation navChanged={navChanged} showSignInPopup={showSignInPopup} setShowSignInPopup={setShowSignInPopup} />
-        <Routes >
-          <Route path="/" element={<LandingPage
-            setShowSignInPopup={setShowSignInPopup}
-            searchField={searchField}
-            setSearchField={setSearchField}
-          />} />
-          <Route path="/profiles" element={<ProfilePage
-            setShowSignInPopup={setShowSignInPopup}
-            searchField={searchField}
-            setSearchField={setSearchField}
-          />} />
-          <Route path="/workbranch" element={selectCurrentUser ? <WorkbranchPage /> : <Navigate to="/" replace />} />
-
-          <Route path="/profile-edit-mode/:studentId" element={<ProfileEditMode />} />
-          <Route path="/test-blockchain" element={<ContractBtns />} />
-        </Routes>
-        <Footer />
-      </EthProvider>
+      <Navigation navChanged={navChanged} showSignInPopup={showSignInPopup} setShowSignInPopup={setShowSignInPopup} />
+      <Routes >
+        <Route path="/" element={<LandingPage
+          setShowSignInPopup={setShowSignInPopup}
+          searchField={searchField}
+          setSearchField={setSearchField}
+        />} />
+        <Route path="/profiles" element={<ProfilePage
+          setShowSignInPopup={setShowSignInPopup}
+          searchField={searchField}
+          setSearchField={setSearchField}
+        />} />
+        <Route path="/workbranch" element={selectCurrentUser ? <EthProvider><WorkbranchPage /></EthProvider> : <Navigate to="/" replace />} />
+        <Route path="/profile-edit-mode/:studentId" element={<ProfileEditMode />} />
+        <Route path='/add-profile' element={selectCurrentUser ? <ProfileEditMode /> : <Navigate to="/" replace />} />
+        <Route path="/test-blockchain" element={<ContractBtns />} />
+      </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
