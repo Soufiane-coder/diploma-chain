@@ -3,7 +3,7 @@ import './App.scss';
 import Navigation from './components/navigation/navigation.component';
 import Footer from './components/footer/footer.component';
 import LandingPage from './pages/landing-page/landing-page.pages';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProfilePage from './pages/profiles/profiles.page';
 import "./firebase/firebase.utils";
 import WorkbranchPage from './pages/workbranch/workbranch.page';
@@ -11,8 +11,19 @@ import { selectCurrentUser } from './redux/user/user.selectors';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ProfileEditMode from './pages/profile-edit-mode/profile-edit-mode.page';
+import { getStudents } from './firebase/firebase.utils';
+import { setStudentList } from './redux/students-profile/students-profile.action';
 
-function App({ currentUser }) {
+function App({ selectCurrentUser, setStudentList }) {
+
+  useEffect(() => {
+    const studentInformations = async () => {
+      const students = await getStudents(selectCurrentUser.user.uid);
+      setStudentList(students);
+    }
+    studentInformations();
+  }, []);
+
   document.addEventListener('scroll', () => {
     setNavChanged(!window.pageYOffset)
   })
@@ -33,7 +44,7 @@ function App({ currentUser }) {
           searchField={searchField}
           setSearchField={setSearchField}
         />} />
-        <Route path="/workbranch" element={currentUser ? <WorkbranchPage /> : <Navigate to="/" replace />} />
+        <Route path="/workbranch" element={selectCurrentUser ? <WorkbranchPage /> : <Navigate to="/" replace />} />
         <Route path="/profile-edit-mode/:studentId" element={<ProfileEditMode />} />
       </Routes>
       <Footer />
@@ -42,7 +53,11 @@ function App({ currentUser }) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  selectCurrentUser: selectCurrentUser
 })
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  setStudentList: students => dispatch(setStudentList(students))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

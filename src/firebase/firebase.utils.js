@@ -49,16 +49,21 @@ export const getSemesters = async (userId, studentId) => {
 
 
 export const getStudents = async (userId) => {
-  const colRef = collection(db, `users/${userId}/studentProfileList`);
+  try{
+    const colRef = collection(db, `users/${userId}/studentProfileList`);
     // get collection data
-    const students = await getDocPers(colRef, 'studentId');
-    students.forEach(async student => {
-      student.semesters = await getSemesters(userId, student.studentId);
-      student.semesters.forEach(async semester => {
-          semester.modules = await getModules(userId, student.studentId, semester.semester);
-      })
-  })
-  return students;
+      const students = await getDocPers(colRef, 'studentId');
+      students.forEach(async student => {
+        student.semesters = await getSemesters(userId, student.studentId);
+        student.semesters.forEach(async semester => {
+            semester.modules = await getModules(userId, student.studentId, semester.semester);
+        })})
+        return students;
+    }catch(err){
+      console.error(err.message);
+      return null;
+    }
+  
 }
 
 

@@ -10,17 +10,13 @@ export const addStudentToList = student => ({
   payload: student
 })
 
-export const addSemesterToStudentProfileList = studentId => ({
-  type: StudentProfileActionTypes.ADD_SEMESTER_TO_STUDENT_LIST,
-  payload: studentId
-})
 
 export const addModuleToSemester = (studentId, semesterNum, moduleName, note, id) => ({
   type: StudentProfileActionTypes.ADD_MODULE_TO_SEMESTER,
   payload: {studentId, semesterNum, moduleName, note, id}
 })
 
-export const changeAttribut = (studentId, attributeName, newAttributeValue) => ({
-  type: StudentProfileActionTypes.CHANGE_ATTRIBUTE,
-  payload: {studentId, attributeName, newAttributeValue}
-})
+// export const changeAttribut = (studentId, attributeName, newAttributeValue) => ({
+//   type: StudentProfileActionTypes.CHANGE_ATTRIBUTE,
+//   payload: {studentId, attributeName, newAttributeValue}
+// })

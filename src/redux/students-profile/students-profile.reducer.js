@@ -2,7 +2,7 @@ import { StudentProfileActionTypes } from './students-profile.types';
 import { addStudent, addSemester, addModule, changeAttribute } from './students-profile.utils';
 
 const INITIAL_STATE = {
-  studentProfileList: []
+  studentProfileList: null
 };
 
 const studentsProfileReducer = (state = INITIAL_STATE, action) => {

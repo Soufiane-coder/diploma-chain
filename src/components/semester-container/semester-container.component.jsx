@@ -4,14 +4,25 @@ import { ReactComponent as Add } from '../../asset/add.svg';
 import { createStructuredSelector } from "reselect";
 import { selectModules } from "../../redux/students-profile/students-profile.selectors";
 import { connect } from "react-redux";
-import { addModuleToSemester } from "../../redux/students-profile/students-profile.action";
 
-const SemesterContainer = ({ semesterNum, selectModules, studentId, addModuleToSemester }) => {
+const SemesterContainer = ({ semesterNum, selectModules, studentId, studentProfile, setStudentProfile, semesterId }) => {
 
-    const [moduleCollection, setModuleCollection] = useState([{ id: 1, moduleName: "", note: "" }]);
+    const [moduleCollection, setModuleCollection] = useState(studentProfile.semesters[0].modules)
+
+    const addModuleToSemester = () => {
+        // const semesters = 
+        //     setStudentProfile({})
+    }
+
     useEffect(() => {
-        // addModuleToSemester({ studentId, semesterNum, moduleName: "", note: "", id: 1 })
+        if (moduleCollection?.length === 0) {
+            setModuleCollection([{ id: 1, moduleName: "", note: "" }])
+        }
     }, []);
+
+    useEffect(() => {
+        studentProfile.semesters[0].modules = moduleCollection;
+    }, [moduleCollection])
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -20,9 +31,10 @@ const SemesterContainer = ({ semesterNum, selectModules, studentId, addModuleToS
         const searchedModule = moduleCollection.find((item) => item.id === +id.split("_")[1]);
         if (searchedModule) {
             searchedModule[name] = value;
+            setModuleCollection([...moduleCollection])
         }
 
-        if (name === "moduleName") {
+        if (name === "moduleName") { // highlight with red if there is rodendence
             const occuranceNames = moduleCollection.find((item) => item.moduleName === value);
             if (occuranceNames && occuranceNames.id !== +id.split("_")[1]) {
                 event.target.style.borderColor = "red";
@@ -35,21 +47,19 @@ const SemesterContainer = ({ semesterNum, selectModules, studentId, addModuleToS
     }
 
     const handleAddingModule = () => {
-        const { id, moduleName, note } = moduleCollection[moduleCollection.length - 1];
-        addModuleToSemester({ studentId, semesterNum, moduleName, note, id })
-        setModuleCollection(moduleCollection.concat(
-            { id: moduleCollection.length + 1, moduleName: "", note: "" }
-        ));
+        setModuleCollection([...moduleCollection, { id: moduleCollection.length + 1, moduleName: "", note: "" }])
     }
 
     return (
         <fieldset>
             <legend><h1>Semestre {semesterNum}</h1></legend>
             {
-                moduleCollection?.map(item => ( // the name has ba unique
-                    <div className="module-container" key={item.id} id={"module_" + item.id}>
-                        <input type="text" placeholder='Le nom du module' className='forme-input-text' name="moduleName" onChange={handleChange} />
-                        <input type="number" min="0" max="20" placeholder='La note du module / 20' className='forme-input-text' name="note" onChange={handleChange} />
+                moduleCollection?.map(module => ( // the name has ba unique
+                    <div className="module-container" key={module.id} id={"module_" + module.id}>
+                        <input type="text" placeholder='Le nom du module' className='forme-input-text' name="moduleName"
+                            value={module.moduleName} onChange={handleChange} />
+                        <input type="number" min="0" max="20" placeholder='La note du module / 20' className='forme-input-text' name="note"
+                            value={module.note} onChange={handleChange} />
                     </div>
                 ))
             }
@@ -62,9 +72,6 @@ const mapStateToProps = createStructuredSelector({
     selectModules: selectModules
 })
 
-const mapDispatchToProps = dispatch => ({
-    addModuleToSemester: ({ studentId, semesterNum, moduleName, note, id }) => dispatch(addModuleToSemester(studentId, semesterNum, moduleName, note, id))
-})
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(SemesterContainer);
+export default connect(mapStateToProps)(SemesterContainer);
