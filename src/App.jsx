@@ -47,9 +47,9 @@ function App({ selectCurrentUser, setStudentList }) {
           searchField={searchField}
           setSearchField={setSearchField}
         />} />
-        <Route path="/workbranch" element={selectCurrentUser ? <EthProvider><WorkbranchPage /></EthProvider> : <Navigate to="/" replace />} />
-        <Route path="/profile-edit-mode/:studentId" element={<ProfileEditMode />} />
-        <Route path='/add-profile' element={selectCurrentUser ? <ProfileEditMode /> : <Navigate to="/" replace />} />
+        <Route path="/workbranch" element={selectCurrentUser ? <WorkbranchPage /> : <Navigate to="/" replace />} />
+        <Route path="/profile-edit-mode/:studentId" element={<EthProvider><ProfileEditMode /></EthProvider>} />
+        <Route path='/add-profile' element={selectCurrentUser ? <EthProvider><ProfileEditMode /></EthProvider> : <Navigate to="/" replace />} />
         <Route path="/test-blockchain" element={<ContractBtns />} />
       </Routes>
       <Footer />

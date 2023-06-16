@@ -15,20 +15,71 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { selectStudent } from '../../redux/students-profile/students-profile.selectors';
 import withLoading from '../../components/with-loading/with-loading';
 import _ from 'lodash';
-import { addProfile, updatingName } from '../../firebase/firebase.utils';
+import { addProfile, getUniversity, updatingName } from '../../firebase/firebase.utils';
+import { ReactComponent as Ethereum } from '../../asset/ethereum.svg';
+import useEth from "../../contexts/EthContext/useEth";
 
 const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentList, selectCurrentUser, addStudentToList }) => {
     const params = useParams();
     const navigate = useNavigate();
+
+    const { state: { contract, accounts } } = useEth(); // concern the blockchain
+
     const isAddingPage = Object.keys(params).length === 0;
 
     const initialStudent = isAddingPage ? { studentId: "", cin: "", cne: "", apogée: "", nom: "", prénom: "", semesters: [{ modules: [{ id: 1, moduleName: "", note: "" }], semester: 1 }] } : _.cloneDeep(selectStudent(params.studentId));
 
     const [studentProfile, setStudentProfile] = useState(initialStudent);
 
+    const [levelsOfDiploma, setLevelsOfDiploma] = useState([]);
+
+    const [inputRef, setInputRef] = useState({ deug: "", licence: "", master: "" });
+
+    const updateLevelsDiploma = () => {
+        if (studentProfile.semesters.length >= 4) {
+            if (studentProfile.semesters.some(semester => semester.modules.some(module => +module.note >= 10))) {
+                levelsOfDiploma[0] = "deug";
+                setLevelsOfDiploma([...levelsOfDiploma]);
+            }
+            else {
+                setLevelsOfDiploma([]);
+                return;
+            }
+            if (studentProfile.semesters.length >= 6) {
+                if (studentProfile.semesters.some(semester => semester.modules.some(module => +module.note >= 10))) {
+                    levelsOfDiploma[1] = "licence";
+                    setLevelsOfDiploma([...levelsOfDiploma]);
+                }
+                else {
+                    setLevelsOfDiploma(["deug"]);
+                    return;
+                }
+
+                if (studentProfile.semesters.length >= 10) {
+                    if (studentProfile.semesters.some(semester => semester.modules.some(module => +module.note >= 10))) {
+                        levelsOfDiploma[2] = "master";
+                        setLevelsOfDiploma([...levelsOfDiploma]);
+                    }
+                    else {
+                        setLevelsOfDiploma(["deug", "licence"]);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    useEffect(() => {
+        console.log(inputRef);
+    }, [inputRef]); //
+
     useEffect(() => {
         setTimeout(() => {
             setStudentProfile(initialStudent);
+            updateLevelsDiploma();
+            console.log(levelsOfDiploma);
         }, 1000); // this has to change
     }, [])
 
@@ -38,7 +89,6 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
             studentProfile.semesters.push({ semester: 1, modules: [] })
             setStudentProfile({ ...studentProfile });
         }
-        console.log(studentProfile);
     }, [studentProfile]);
 
 
@@ -60,8 +110,7 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
     }
 
     const handleAddingSemester = () => {
-        setStudentProfile({ ...studentProfile, semesters: [...studentProfile.semesters, { semester: studentProfile.semesters.length + 1, modules: [] }] })
-        console.log(studentProfile);
+        setStudentProfile({ ...studentProfile, semesters: [...studentProfile.semesters, { semester: studentProfile.semesters.length + 1, modules: [] }] });
     }
 
     const handleChange = (event) => {
@@ -75,12 +124,45 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         navigate('/workbranch');
     }
 
+    const getDiplomesBelongToStudent = async (studentCin) => {
+        let diplomes = [];
+        const diplomesCount = parseInt(await contract.methods.diplomeCount().call({ from: accounts[0] }), 10);
+        for (let i = 0; i < diplomesCount; i++) {
+            const diplome = await contract.methods.diplomes(i).call({ from: accounts[0] });
+            if (diplome.cin === studentCin) {
+                const [niveau, ref] = diplome.niveauRef.split('|');
+                diplomes.push({ cin: diplome.cin, niveau, ref });
+            }
+        }
+        return diplomes;
+    }
+
+    const handlePushBlockchain = async (event) => {
+        event.preventDefault();
+        const { level } = event.target;
+        const university = await getUniversity(selectCurrentUser.user.uid);
+        try {
+            // await contract.methods.addDiplome("vD45", `${level}|${inputRef[level]}`).send({ from: accounts[0] });
+            // the second argument sould be niveau|ref
+            await contract.methods.addDiplome("vD45", "qdlqjf|flqdj").send({ from: accounts[0] });
+            const res = await getDiplomesBelongToStudent("vc");
+            console.log(res);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const handleInputRef = (event) => {
+        const { name, value } = event.target;
+        setInputRef({ ...inputRef, [name]: value });
+    }
+
 
     return (
         <form className="profile-edit-mode" onSubmit={handleSubmit}>
             <div className="button-section">
                 <button className='button-section__confirme btn-background'><Check />Confirmer</button>
-                <button className='button-section__cancel btn-background'><Close />Annuler</button>
+                <button className='button-section__cancel btn-background' onClick={handleCancel}><Close />Annuler</button>
             </div>
             <div className="profile">
                 <div className="profile__header">
@@ -151,6 +233,16 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
                         <Add />Ajouter semestre
                     </button>
                 </div>
+            </div>
+            <div className='blockchain-buttons'>
+                {
+                    levelsOfDiploma.map((level) => (
+                        <div className='container' key={`level_${level}`} placeholder="hel">
+                            <input type="text" className='forme-input-text' placeholder={`${level} ref`} name={level} value={inputRef[level]} onChange={handleInputRef} />
+                            <button className='push-blockchain-btn btn-background' name={level} onClick={handlePushBlockchain}><Ethereum /> Push to Blockchain</button>
+                        </div>
+                    ))
+                }
             </div>
             <div className="button-section">
                 <button className='button-section__confirme btn-background'><Check />Confirmer</button>

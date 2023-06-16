@@ -59,18 +59,23 @@ const getDocPers = async (colRef, typeOfId) => {
 // }
 
 
+// getting all the students that belong to an admin
 export const getStudents = async (userId) => {
   try{
     const colRef = collection(db, `users/${userId}/studentProfileList`);
-    // get collection data
       return await getDocPers(colRef, 'studentId');
     }catch(err){
       console.error(err.message);
       return null;
     }
-  
 }
 
+export const getUniversity = async (userId) => {
+  // get a signle document
+  const colRef = collection(db, `users`);
+  const listUniversities = await getDocPers(colRef, "userId");
+  return listUniversities.find(item => item.userId === userId)?.university;
+}
 
 // deleting documents
 
@@ -83,8 +88,8 @@ export const deleteStudent = async (userId, studentId) => {
   }
 }
 
-export const updatingName = async (userId, studentId, updatedProfile) => {
 // updating a document
+export const updatingName = async (userId, studentId, updatedProfile) => {
   const docRef = doc(db, `users/${userId}/studentProfileList/`, studentId);
   try{
     await updateDoc(docRef, updatedProfile);
@@ -93,14 +98,16 @@ export const updatingName = async (userId, studentId, updatedProfile) => {
   }
 }
 
+// adding a profile to the list of profiles
+// that belong to an admin
+
 export const addProfile = async (userId, newProfile) => {
-  // collection ref
   const colRef = collection(db, `users/${userId}/studentProfileList/`);
-  // adding collection data
   try{
     const res = await addDoc(colRef, newProfile);
     const docRef = doc(db, `users/${userId}/studentProfileList/`, res.id);
-    await updateDoc(docRef, {...newProfile, studentId: res.id}); // update the studentId attribute from "" to the its value
+    await updateDoc(docRef, {...newProfile, studentId: res.id});
+     // update the studentId attribute from "" to the its value
   }catch(err){
     console.error(err.message);
   }

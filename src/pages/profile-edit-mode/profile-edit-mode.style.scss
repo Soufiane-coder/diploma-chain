@@ -14,6 +14,8 @@
     min-height: 100rem;
     background-color: $secondery-color3;
     padding: $nav-height $header-padding $header-padding;
+    font-size:inherit;
+    font-size: 3rem;
     .button-section{
         padding: 2rem 0;
         text-align: right;
@@ -25,6 +27,22 @@
             }
         }
     }
+    .blockchain-buttons{
+        .container{
+            .push-blockchain-btn{
+                margin-top: 2rem;
+                margin-left: 2rem;
+                font-size: inherit;
+                font-family: inherit;
+                font-size: 3rem;
+                svg{
+                    height : 3rem;
+                    margin-right: 1rem;
+                }
+            }
+        }
+    }
+    
     .profile{
         &__header{
             display: flex;
