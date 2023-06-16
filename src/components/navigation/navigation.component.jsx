@@ -1,7 +1,7 @@
 import React from "react";
 import logoDiplomaChain from '../../image/logo-diploma-chain.png';
 import SignInPopup from "../sign-in-popup/sign-in-popup.components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./navigation.style.scss";
 import { useState } from "react";
 import { connect } from "react-redux";
@@ -11,7 +11,7 @@ import { signOutAuthed } from "../../firebase/firebase.utils";
 import { setCurrentUser } from "../../redux/user/user.actions";
 
 const Navigation = ({ showSignInPopup, setShowSignInPopup, currentUser, setCurrentUser, navChanged }) => {
-
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         identifiant: "",
         password: ""
@@ -21,6 +21,7 @@ const Navigation = ({ showSignInPopup, setShowSignInPopup, currentUser, setCurre
         signOutAuthed()
             .then(() => {
                 console.log(setCurrentUser(null));
+                navigate('/');
             })
             .catch((err) => console.log(err.message));
     }

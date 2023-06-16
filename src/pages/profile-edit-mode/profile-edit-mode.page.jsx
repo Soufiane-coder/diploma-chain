@@ -69,11 +69,17 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         }
     }
 
-
-
     useEffect(() => {
-        console.log(inputRef);
-    }, [inputRef]); //
+        const fetchData = async () => {
+            const res = await getDiplomesBelongToStudent(studentProfile.cin);
+            res?.forEach(item => {
+                setInputRef(prevState => ({ ...prevState, [item.niveau]: item.ref }));
+            })
+            // setInputRef({ ...inputRef, ["deug"]: "FQF3FFA" });
+            console.log(res);
+        }
+        fetchData();
+    }, []);
 
     useEffect(() => {
         setTimeout(() => {
@@ -139,14 +145,9 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
 
     const handlePushBlockchain = async (event) => {
         event.preventDefault();
-        const { level } = event.target;
-        const university = await getUniversity(selectCurrentUser.user.uid);
+        const { name } = event.target;
         try {
-            // await contract.methods.addDiplome("vD45", `${level}|${inputRef[level]}`).send({ from: accounts[0] });
-            // the second argument sould be niveau|ref
-            await contract.methods.addDiplome("vD45", "qdlqjf|flqdj").send({ from: accounts[0] });
-            const res = await getDiplomesBelongToStudent("vc");
-            console.log(res);
+            await contract.methods.addDiplome(studentProfile.cin, name + "|" + inputRef[name]).send({ from: accounts[0] });
         } catch (err) {
             console.error(err);
         }
