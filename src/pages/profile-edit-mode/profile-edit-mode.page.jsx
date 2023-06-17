@@ -70,22 +70,23 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            const res = await getDiplomesBelongToStudent(studentProfile.cin);
-            res?.forEach(item => {
-                setInputRef(prevState => ({ ...prevState, [item.niveau]: item.ref }));
-            })
-            // setInputRef({ ...inputRef, ["deug"]: "FQF3FFA" });
-            console.log(res);
+        if (contract) {
+            const fetchData = async () => {
+                const res = await getDiplomesBelongToStudent(studentProfile.cin);
+                res?.forEach(item => {
+                    setInputRef(prevState => ({ ...prevState, [item.niveau]: item.ref }));
+                })
+                // console.log(res);
+            }
+            fetchData();
         }
-        fetchData();
-    }, []);
+    }, [contract]);
 
     useEffect(() => {
         setTimeout(() => {
             setStudentProfile(initialStudent);
             updateLevelsDiploma();
-            console.log(levelsOfDiploma);
+            // console.log(levelsOfDiploma);
         }, 1000); // this has to change
     }, [])
 

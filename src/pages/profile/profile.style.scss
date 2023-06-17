@@ -1,0 +1,24 @@
+@import "../../styles/variables.scss";
+
+.profile{
+    min-height: 100rem;
+    background-color: $secondery-color3;
+    padding: $nav-height 0 $header-padding 0;
+    &__information-perso{
+        background-color: $primary-color;
+        width: 40rem;
+        height: 100rem;
+        display: flex;
+        flex-direction: column;
+        .profile_image{
+            padding: 3rem;
+            width: 100%;
+            height:fit-content;
+            border-bottom: 1px solid white;
+        }
+        h1{
+            color: white;
+            align-self: center;
+        }
+    }
+}

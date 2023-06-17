@@ -1,15 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useParams } from "react-router-dom";
+import LoadingSpin from "../../components/loading-spin/loading-spin";
 import SearchBar from "../../components/search-bar/search-bar.component";
+import { getStudents, getUsersId } from "../../firebase/firebase.utils";
 import CardList from "../../layout/profiles/card-list.layout";
+import { setAllProfiles } from "../../redux/all-profiles/all-profiles.action";
 import "./profiles.style.scss";
 
-const ProfilePage = ({ setShowSignInPopup, ...otherProps }) => {
+const ProfilePage = ({ setShowSignInPopup, searchField, setSearchField, setAllProfiles }) => {
+    const params = useParams();
+    const [allStudents, setAllStudents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [searchedStudents, setSearchedStudents] = useState([]);
+
+    const detectSearching = () => {
+        if (/^[0-9]+$/.test(params.search)) {
+            return "apogée";
+        }
+        // Check if the params.search starts with characters and ends with numbers
+        if (/^[A-Za-z]+[0-9]+$/.test(params.search)) {
+            return "cin";
+        }
+        // If none of the above conditions are met, assume it contains only characters
+        return "nom";
+    }
+
+    const typeOfSearch = detectSearching();
+
+    const doSearch = () => {
+        if (typeOfSearch === "nom") {
+            setSearchedStudents([...allStudents.filter(student => student.nom === params.search), ...allStudents.filter(student => student.prénom === params.search)]);
+        } else {
+            setSearchedStudents(allStudents.filter(student => student[typeOfSearch] === params.search));
+        }
+    }
+    useEffect(() => {
+        if (!isLoading) {
+            doSearch();
+        }
+        setAllProfiles(allStudents);
+    }, [allStudents]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const usersId = await getUsersId();
+            for (const userId of usersId) {
+                const students = await getStudents(userId);
+
+                setAllStudents([...allStudents.concat(students)]);
+            }
+            setIsLoading(false);
+        }
+        fetchData();
+    }, []);
+
     return (
         <div className="profile-page" onClick={() => setShowSignInPopup(false)}>
-            <SearchBar {...otherProps} />
-            <CardList />
+            <SearchBar searchField={searchField} setSearchField={setSearchField} setIsLoading={setIsLoading} doSearch={doSearch} />
+            {
+                isLoading ? <LoadingSpin /> : <CardList searchedStudents={searchedStudents} />
+            }
         </div>
     )
 }
 
-export default ProfilePage;
+const mapDispatchToProps = dispatch => ({
+    setAllProfiles: allStudents => dispatch(setAllProfiles(allStudents))
+})
+
+export default connect(null, mapDispatchToProps)(ProfilePage);

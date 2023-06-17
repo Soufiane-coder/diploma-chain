@@ -2,7 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import {getFirestore, collection, getDocs, deleteDoc, doc, updateDoc, addDoc} from "firebase/firestore";
-import {getDoc } from "firebase/firestore";
+import { query, where } from "firebase/firestore";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -69,6 +70,14 @@ export const getStudents = async (userId) => {
       return null;
     }
 }
+
+export const getUsersId = async () => {
+  // get a signle document
+  const colRef = collection(db, `users`);
+  let snapshot = await getDocs(colRef);
+  return snapshot.docs.map((doc) => doc.id);
+}
+
 
 export const getUniversity = async (userId) => {
   // get a signle document

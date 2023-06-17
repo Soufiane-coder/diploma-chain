@@ -14,7 +14,8 @@ import ProfileEditMode from './pages/profile-edit-mode/profile-edit-mode.page';
 import { getStudents } from './firebase/firebase.utils';
 import { setStudentList } from './redux/students-profile/students-profile.action';
 import { EthProvider } from "./contexts/EthContext";
-import ContractBtns from './components/test-blockchain/ContractBtns';
+import Profile from './pages/profile/profile.component';
+
 
 function App({ selectCurrentUser, setStudentList }) {
 
@@ -33,6 +34,7 @@ function App({ selectCurrentUser, setStudentList }) {
   const [navChanged, setNavChanged] = useState(true);
   const [showSignInPopup, setShowSignInPopup] = useState(false);
   const [searchField, setSearchField] = useState("");
+
   return (
     <BrowserRouter>
       <Navigation navChanged={navChanged} showSignInPopup={showSignInPopup} setShowSignInPopup={setShowSignInPopup} />
@@ -43,7 +45,7 @@ function App({ selectCurrentUser, setStudentList }) {
           setSearchField={setSearchField}
         />} />
 
-        <Route path="/profiles" element={<ProfilePage
+        <Route path="/profiles/:search" element={<ProfilePage
           setShowSignInPopup={setShowSignInPopup}
           searchField={searchField}
           setSearchField={setSearchField}
@@ -55,7 +57,8 @@ function App({ selectCurrentUser, setStudentList }) {
 
         <Route path='/add-profile' element={selectCurrentUser ? <EthProvider><ProfileEditMode /></EthProvider> : <Navigate to="/" replace />} />
 
-        <Route path="/test-blockchain" element={<ContractBtns />} />
+        <Route path="/profile/:studentId" element={<Profile />} />
+        <Route path="*" element={<h1> Error 404</h1>} />
       </Routes>
       <Footer />
     </BrowserRouter>
