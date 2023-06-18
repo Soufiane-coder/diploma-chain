@@ -68,9 +68,9 @@ const Profile = ({ selectProfile }) => {
         <div className='profile-view'>
             <div className="profile-view__information-perso">
                 <div className="profile-view_image"><img src={imageURL !== "" ? imageURL : User} alt="" /></div>
-                <h1><b>{thisStudent.nom}</b> {thisStudent.prénom}</h1>
+                <h1 className='full-name'><b>{thisStudent.nom}</b> {thisStudent.prénom}</h1>
                 <ul className='profile-view__information-list'>
-                    <li><b>CIN</b> : {thisStudent.cin}</li>
+                    <li ><b>CIN</b> : {thisStudent.cin}</li>
                     <li><b>CNE</b> : {thisStudent.cne}</li>
                     <li><b>Apogée</b> : {thisStudent.apogée}</li>
                 </ul>

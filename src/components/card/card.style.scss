@@ -32,11 +32,19 @@ $image-size: 7rem;
         color: white;
         font-weight: 300;
         font-size: 2.5rem;
+        b , & span {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
     }
     p{
         text-align: start;
         color: white;
         padding: .8rem 6rem;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
     button{
         margin: 4rem;

@@ -11,7 +11,7 @@ const Card = ({ student }) => {
     return (
         <div className="profil-card">
             <img src={student.imageURL ? student.imageURL : User} alt="profile-img" className="profil-card__profile-img" />
-            <h2 className="profil-card__name"><b>{student.nom}</b> {student.prénom}</h2>
+            <h2 className="profil-card__name"><b>{student.nom}</b> <span>{student.prénom}</span></h2>
             <p>CIN: {student?.cin}</p>
             <p>Apogée: {student?.apogée}</p>
             <p>CNE: {student?.cne}</p>
