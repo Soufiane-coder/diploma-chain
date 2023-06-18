@@ -20,3 +20,8 @@ export const addModuleToSemester = (studentId, semesterNum, moduleName, note, id
 //   type: StudentProfileActionTypes.CHANGE_ATTRIBUTE,
 //   payload: {studentId, attributeName, newAttributeValue}
 // })
+
+export const removeStudent = studentId => ({
+  type: StudentProfileActionTypes.DELETE_STUDENT,
+  payload: studentId
+})

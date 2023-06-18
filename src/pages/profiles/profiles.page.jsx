@@ -30,9 +30,10 @@ const ProfilePage = ({ setShowSignInPopup, searchField, setSearchField, setAllPr
     const typeOfSearch = detectSearching();
 
     const getImage = async (studentId) => {
-        console.log(getStorage());
         const storageRef = ref(getStorage(), 'images/' + studentId);
-        return await getDownloadURL(storageRef);
+        try {
+            return await getDownloadURL(storageRef);
+        } catch (err) { return undefined }
     }
 
 
@@ -53,11 +54,10 @@ const ProfilePage = ({ setShowSignInPopup, searchField, setSearchField, setAllPr
         const addingImageAtt = async () => {
             for (let student of searchedStudents) {
                 student.imageURL = await getImage(student.studentId);
-                console.log(student.imageURL);
             }
-            setSearchField(old => [...old, ...searchedStudents]);
+            setSearchedStudents(old => [...old]);
         }
-        if (searchedStudents.length !== 0) {
+        if (searchedStudents.length !== 0 && !searchedStudents[0].hasOwnProperty('imageURL')) {
             addingImageAtt();
         }
     }, [searchedStudents])

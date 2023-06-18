@@ -25,11 +25,14 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
     const navigate = useNavigate();
     const location = useLocation();
 
+
     const { state: { contract, accounts } } = useEth(); // concern the blockchain
 
-    const isAddingPage = Object.keys(params).length === 0;
+    const isAddingPage = location.pathname === '/add-profile';
 
     const initialStudent = isAddingPage ? { studentId: "", cin: "", cne: "", apogée: "", nom: "", prénom: "", semesters: [{ modules: [{ id: 1, moduleName: "", note: "" }], semester: 1 }] } : _.cloneDeep(selectStudent(params.studentId));
+
+
 
     const [studentProfile, setStudentProfile] = useState(initialStudent);
 
@@ -75,7 +78,12 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         }
     }
 
+
     useEffect(() => {
+        if (!initialStudent && !isAddingPage) {
+            navigate('/student not found');
+            return;
+        }
         if (contract) {
             const fetchData = async () => {
                 const res = await getDiplomesBelongToStudent(studentProfile.cin);
@@ -88,10 +96,20 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         }
     }, [contract]);
 
+
+
     useEffect(() => {
+        if (!initialStudent && !isAddingPage) {
+            return;
+        }
         const getImage = async () => {
-            const storageRef = ref(storage, 'images/' + params.studentId);
-            setImageURL(await getDownloadURL(storageRef));
+            try {
+                const storageRef = ref(storage, 'images/' + params.studentId);
+                setImageURL(await getDownloadURL(storageRef));
+            }
+            catch (err) {
+                console.error(err);
+            }
         }
         getImage();
         setTimeout(() => {
@@ -102,7 +120,9 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
     }, [])
 
     useEffect(() => {
-
+        if (!initialStudent && !isAddingPage) {
+            return;
+        }
         if (studentProfile?.semesters?.length === 0) {
             studentProfile.semesters.push({ semester: 1, modules: [] })
             setStudentProfile({ ...studentProfile });
@@ -110,7 +130,7 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
     }, [studentProfile]);
 
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         if (!isAllInputsFilled()) {
             alert("Fill all field");
@@ -121,11 +141,11 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         setStudentList([...selectStudentProfileList]);
 
         if (isAddingPage) {
-            addProfile(selectCurrentUser.user.uid, studentProfile);
+            studentProfile.studentId = await addProfile(selectCurrentUser.user.uid, studentProfile);
             addStudentToList(studentProfile);
         }
         else {
-            updatingName(selectCurrentUser.user.uid, studentProfile.studentId, studentProfile);
+            await updatingName(selectCurrentUser.user.uid, studentProfile.studentId, studentProfile);
         }
         navigate('/workbranch');
         alert("succés");
@@ -198,6 +218,8 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         setImageURL(downloadURL);
     };
 
+
+
     return (
         <form className="profile-edit-mode" onSubmit={handleSubmit}>
             <div className="button-section">
@@ -207,9 +229,9 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
             <div className="profile">
                 <div className="profile__header">
                     <div className="img-section">
-                        <img src={imageURL !== "" ? imageURL : User} />
-                        <label className="upload-button btn-background" htmlFor="upload-image">Upload File</label>
-                        <input id="upload-image" type="file" accept="image/png" onChange={handleImageUpload} />
+                        {isAddingPage ? "" : <><img src={imageURL !== "" ? imageURL : User} />
+                            <label className="upload-button btn-background" htmlFor="upload-image">Upload File</label>
+                            <input id="upload-image" type="file" accept="image/png" onChange={handleImageUpload} /></>}
                     </div>
                     <div className="description-personel">
                         <h1 className='description-personel__titre'>Informations Personel</h1>

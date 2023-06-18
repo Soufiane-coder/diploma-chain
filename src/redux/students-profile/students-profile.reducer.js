@@ -1,5 +1,6 @@
+
 import { StudentProfileActionTypes } from './students-profile.types';
-import { addStudent, addSemester, addModule, changeAttribute } from './students-profile.utils';
+import { addStudent, addSemester, addModule, changeAttribute, deleteStudent } from './students-profile.utils';
 
 const INITIAL_STATE = {
   studentProfileList: null
@@ -32,6 +33,11 @@ const studentsProfileReducer = (state = INITIAL_STATE, action) => {
         return {
           ...state,
           studentProfileList: changeAttribute(state.studentProfileList, action.payload.studentId, action.payload.attributeName, action.payload.newAttributeValue)
+        }
+      case StudentProfileActionTypes.DELETE_STUDENT:
+        return{
+          ...state,
+          studentProfileList: deleteStudent(state.studentProfileList, action.payload)
         }
     default:
       return state;

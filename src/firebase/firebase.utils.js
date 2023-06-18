@@ -89,7 +89,7 @@ export const getUniversity = async (userId) => {
 // deleting documents
 
 export const deleteStudent = async (userId, studentId) => {
-  const docRef = doc(db, `users/${userId}/students`, studentId);
+  const docRef = doc(db, `users/${userId}/studentProfileList/`, studentId);
   try{
     await deleteDoc(docRef);
   }catch(err){
@@ -117,6 +117,7 @@ export const addProfile = async (userId, newProfile) => {
     const docRef = doc(db, `users/${userId}/studentProfileList/`, res.id);
     await updateDoc(docRef, {...newProfile, studentId: res.id});
      // update the studentId attribute from "" to the its value
+    return res.id;
   }catch(err){
     console.error(err.message);
   }

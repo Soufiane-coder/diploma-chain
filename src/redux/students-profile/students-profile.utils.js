@@ -39,3 +39,7 @@ export const changeAttribute = (studentList, studentId, attributeName, newAttrib
     searchedStudent[attributeName] = newAttributeValue;
     return studentList;
 }
+
+export const deleteStudent = (studentList, studentId) => {
+    return studentList.filter(student => student.studentId !== studentId)
+}

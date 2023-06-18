@@ -10,13 +10,20 @@ import { selectCurrentUser } from "../../../redux/user/user.selectors";
 import { connect } from "react-redux";
 import { selectStudentProfileList } from '../../../redux/students-profile/students-profile.selectors';
 import { Fade } from 'react-reveal';
+import { removeStudent } from '../../../redux/students-profile/students-profile.action';
 
-const WorkbranchList = ({ selectCurrentUser, selectStudentList }) => {
+const WorkbranchList = ({ selectCurrentUser, selectStudentList, deleteStudentLocal }) => {
     const navigate = useNavigate();
+
     const handleDelete = (event) => {
         if (!window.confirm("Est ce que vous voulez vraiment supprimer cet élement")) return;
         const { id: studentId } = event.target.closest('.workbranch-page__item');
-        deleteStudent(selectCurrentUser.user.uid, studentId);
+        const fetchData = async () => {
+            await deleteStudent(selectCurrentUser.user.uid, studentId);
+            console.log(studentId);
+            deleteStudentLocal(studentId);
+        }
+        fetchData();
     }
 
     const HandleEdit = (event) => {
@@ -50,5 +57,9 @@ const mapStateToProps = createStructuredSelector({
     selectStudentList: selectStudentProfileList
 })
 
+const mapDispatchToProps = dispatch => ({
+    deleteStudentLocal: studentId => dispatch(removeStudent(studentId))
+})
 
-export default withLoading(connect(mapStateToProps)(WorkbranchList))
+
+export default withLoading(connect(mapStateToProps, mapDispatchToProps)(WorkbranchList))

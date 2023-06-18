@@ -19,10 +19,17 @@ const Profile = ({ selectProfile }) => {
 
     const storage = getStorage();
     const [imageURL, setImageURL] = useState();
+
     useEffect(() => {
         const getImage = async () => {
-            const storageRef = ref(storage, 'images/' + params.studentId);
-            setImageURL(await getDownloadURL(storageRef));
+            try {
+                const storageRef = ref(storage, 'images/' + params.studentId);
+                setImageURL(await getDownloadURL(storageRef));
+            }
+            catch (err) {
+                console.error(err);
+                setImageURL("");
+            }
         }
         getImage();
     }, [])
