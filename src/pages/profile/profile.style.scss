@@ -1,24 +1,62 @@
 @import "../../styles/variables.scss";
+$information-perso-width: 40rem;
 
-.profile{
+.profile-view{
     min-height: 100rem;
     background-color: $secondery-color3;
-    padding: $nav-height 0 $header-padding 0;
+    padding-top: $nav-height; 
+    display: flex;
     &__information-perso{
+        color: white;
         background-color: $primary-color;
-        width: 40rem;
-        height: 100rem;
-        display: flex;
+        width: $information-perso-width;
+        min-height: 100rem;
+        display: inline-flex;
         flex-direction: column;
-        .profile_image{
+        .profile-view_image{
             padding: 3rem;
-            width: 100%;
-            height:fit-content;
-            border-bottom: 1px solid white;
+            width: $information-perso-width;
+            height: $information-perso-width;
+            img{
+                width: 100%;
+                height: 100%;
+                border-radius: 1000px;
+                object-fit: cover;
+            }
+            margin-bottom: 1rem;
+            background-color: $secondery-color2;
         }
         h1{
             color: white;
             align-self: center;
+            font-weight: 300;
+            padding-bottom: 6px;
+        }
+        ::selection{
+            background-color: $secondery-color2;
+        }
+    }
+    &__information-list{
+        li{
+            list-style-type: none;
+            margin-top: 2rem;
+        }
+        font-size: 3rem;
+        margin-left: 5rem;
+    }
+    .education-infromations{
+        display: inline-block;
+        height: 100%;
+        width: calc(100% - $information-perso-width);
+        $margins : 4rem;
+        .title{
+            font-size: 6rem;
+            font-weight: 400;
+            margin: $margins;
+        }
+        .diplomas-section{
+            margin: 0 $margins;
+            width: calc(100% - 2*$margins)  ;
         }
     }
 }

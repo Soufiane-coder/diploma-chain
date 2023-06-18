@@ -6,6 +6,7 @@ import SearchBar from "../../components/search-bar/search-bar.component";
 import { getStudents, getUsersId } from "../../firebase/firebase.utils";
 import CardList from "../../layout/profiles/card-list.layout";
 import { setAllProfiles } from "../../redux/all-profiles/all-profiles.action";
+import { getStorage, getDownloadURL, ref } from 'firebase/storage';
 import "./profiles.style.scss";
 
 const ProfilePage = ({ setShowSignInPopup, searchField, setSearchField, setAllProfiles }) => {
@@ -28,18 +29,44 @@ const ProfilePage = ({ setShowSignInPopup, searchField, setSearchField, setAllPr
 
     const typeOfSearch = detectSearching();
 
-    const doSearch = () => {
+    const getImage = async (studentId) => {
+        console.log(getStorage());
+        const storageRef = ref(getStorage(), 'images/' + studentId);
+        return await getDownloadURL(storageRef);
+    }
+
+
+    const doSearch = async () => {
         if (typeOfSearch === "nom") {
-            setSearchedStudents([...allStudents.filter(student => student.nom === params.search), ...allStudents.filter(student => student.prénom === params.search)]);
+            setSearchedStudents([...allStudents.filter((student) =>
+                student.nom === params.search
+            ), ...allStudents.filter(student => student.prénom === params.search)]);
+
+
         } else {
             setSearchedStudents(allStudents.filter(student => student[typeOfSearch] === params.search));
         }
+
     }
+
+    useEffect(() => {
+        const addingImageAtt = async () => {
+            for (let student of searchedStudents) {
+                student.imageURL = await getImage(student.studentId);
+                console.log(student.imageURL);
+            }
+            setSearchField(old => [...old, ...searchedStudents]);
+        }
+        if (searchedStudents.length !== 0) {
+            addingImageAtt();
+        }
+    }, [searchedStudents])
+
     useEffect(() => {
         if (!isLoading) {
+            setAllProfiles(allStudents);
             doSearch();
         }
-        setAllProfiles(allStudents);
     }, [allStudents]);
 
     useEffect(() => {
@@ -47,8 +74,7 @@ const ProfilePage = ({ setShowSignInPopup, searchField, setSearchField, setAllPr
             const usersId = await getUsersId();
             for (const userId of usersId) {
                 const students = await getStudents(userId);
-
-                setAllStudents([...allStudents.concat(students)]);
+                setAllStudents(old => [...old, ...students]);
             }
             setIsLoading(false);
         }

@@ -14,17 +14,20 @@ import ProfileEditMode from './pages/profile-edit-mode/profile-edit-mode.page';
 import { getStudents } from './firebase/firebase.utils';
 import { setStudentList } from './redux/students-profile/students-profile.action';
 import { EthProvider } from "./contexts/EthContext";
-import Profile from './pages/profile/profile.component';
+import Profile from './pages/profile/profile.page';
+import PageNotFound from './pages/page-not-found/page-not-found.page';
 
 
 function App({ selectCurrentUser, setStudentList }) {
 
   useEffect(() => {
-    const studentInformations = async () => {
-      const students = await getStudents(selectCurrentUser.user.uid);
-      setStudentList(students);
+    if (selectCurrentUser) {
+      const studentInformations = async () => {
+        const students = await getStudents(selectCurrentUser.user.uid);
+        setStudentList(students);
+      }
+      studentInformations();
     }
-    studentInformations();
   }, []);
 
   document.addEventListener('scroll', () => {
@@ -57,8 +60,8 @@ function App({ selectCurrentUser, setStudentList }) {
 
         <Route path='/add-profile' element={selectCurrentUser ? <EthProvider><ProfileEditMode /></EthProvider> : <Navigate to="/" replace />} />
 
-        <Route path="/profile/:studentId" element={<Profile />} />
-        <Route path="*" element={<h1> Error 404</h1>} />
+        <Route path="/profile/:studentId" element={<EthProvider><Profile /></EthProvider>} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>

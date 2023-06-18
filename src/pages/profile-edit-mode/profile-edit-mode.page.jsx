@@ -5,7 +5,7 @@ import { ReactComponent as Check } from '../../asset/check.svg';
 import { ReactComponent as Close } from '../../asset/close.svg';
 import { ReactComponent as Add } from '../../asset/add.svg';
 import User from '../../image/user.png';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { selectStudentProfileList } from '../../redux/students-profile/students-profile.selectors';
 import { connect } from 'react-redux';
@@ -18,10 +18,12 @@ import _ from 'lodash';
 import { addProfile, getUniversity, updatingName } from '../../firebase/firebase.utils';
 import { ReactComponent as Ethereum } from '../../asset/ethereum.svg';
 import useEth from "../../contexts/EthContext/useEth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentList, selectCurrentUser, addStudentToList }) => {
     const params = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { state: { contract, accounts } } = useEth(); // concern the blockchain
 
@@ -34,6 +36,10 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
     const [levelsOfDiploma, setLevelsOfDiploma] = useState([]);
 
     const [inputRef, setInputRef] = useState({ deug: "", licence: "", master: "" });
+
+    const storage = getStorage();
+
+    const [imageURL, setImageURL] = useState("");
 
     const updateLevelsDiploma = () => {
         if (studentProfile.semesters.length >= 4) {
@@ -73,16 +79,21 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         if (contract) {
             const fetchData = async () => {
                 const res = await getDiplomesBelongToStudent(studentProfile.cin);
+
                 res?.forEach(item => {
                     setInputRef(prevState => ({ ...prevState, [item.niveau]: item.ref }));
                 })
-                // console.log(res);
             }
             fetchData();
         }
     }, [contract]);
 
     useEffect(() => {
+        const getImage = async () => {
+            const storageRef = ref(storage, 'images/' + params.studentId);
+            setImageURL(await getDownloadURL(storageRef));
+        }
+        getImage();
         setTimeout(() => {
             setStudentProfile(initialStudent);
             updateLevelsDiploma();
@@ -101,6 +112,10 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if (!isAllInputsFilled()) {
+            alert("Fill all field");
+            return;
+        }
         const index = selectStudentProfileList.indexOf(selectStudent(params.studentId));
         selectStudentProfileList[index] = { ...studentProfile }
         setStudentList([...selectStudentProfileList]);
@@ -159,6 +174,29 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
         setInputRef({ ...inputRef, [name]: value });
     }
 
+    const isAllInputsFilled = () => {
+        const allInputs = [...window.document.querySelectorAll('.description-personel input[type="text"]')];
+        const searchedInput = allInputs.find(input => input.value === "");
+        if (!searchedInput) {
+            return true;
+        }
+        searchedInput.style.borderColor = "red";
+        return false;
+    }
+
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        // Create a storage reference
+        const storageRef = ref(storage, 'images/' + params.studentId);
+
+        // Upload the image file to the storage reference
+        await uploadBytes(storageRef, file);
+
+        // Get the download URL of the uploaded image
+        const downloadURL = await getDownloadURL(storageRef);
+
+        setImageURL(downloadURL);
+    };
 
     return (
         <form className="profile-edit-mode" onSubmit={handleSubmit}>
@@ -169,9 +207,9 @@ const ProfileEditMode = ({ selectStudentProfileList, selectStudent, setStudentLi
             <div className="profile">
                 <div className="profile__header">
                     <div className="img-section">
-                        <img src={User} />
+                        <img src={imageURL !== "" ? imageURL : User} />
                         <label className="upload-button btn-background" htmlFor="upload-image">Upload File</label>
-                        <input id="upload-image" type="file" />
+                        <input id="upload-image" type="file" accept="image/png" onChange={handleImageUpload} />
                     </div>
                     <div className="description-personel">
                         <h1 className='description-personel__titre'>Informations Personel</h1>

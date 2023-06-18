@@ -86,3 +86,12 @@ body{
         transform:translate(.2rem, .2rem);
     }
 }
+
+a:link, a:visited{
+    color: white;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}

@@ -6,7 +6,7 @@ import UniversitySection from "../../layout/landing-page/university-section/univ
 import MoroccoSection from "../../layout/landing-page/morocco-section/morocco-section.layout";
 const LandingPage = ({ setShowSignInPopup, ...otherPros }) => {
     return (
-        <main className="landing-page">
+        <main className="landing-page" onClick={() => setShowSignInPopup(false)}>
             <Header {...otherPros} />
             <CardSection />
             <UniversitySection />

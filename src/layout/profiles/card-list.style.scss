@@ -2,5 +2,6 @@
 .card-list{
     padding: 5rem $header-padding;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: wrap;
 }

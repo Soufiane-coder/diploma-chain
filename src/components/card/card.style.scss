@@ -1,22 +1,30 @@
 @import "../../styles/variables.scss";
 
+$image-size: 7rem;
+
 .profil-card{
     background-color: $primary-color;
+    max-height: 40rem;
     height: 40rem;
-    width: 32rem;
+    max-width: 30rem;
+    width: 30rem;
     border-radius: 5rem;
     position: relative;
-    padding-top: 7rem;
+    padding-top: $image-size;
     margin: 0 1rem;
+    & > *:not(img){
+        overflow: hidden;
+    }
     &__profile-img{
         position: absolute;
-        right: calc(50% - 7rem);
-        top: -7rem;
-        min-height: 14rem;
-        min-width: 14rem;
-        max-height: 14rem;
-        max-width: 14rem;
+        right: calc(50% - $image-size);
+        top: -$image-size;
+        min-height: $image-size *2;
+        min-width: $image-size * 2;
+        max-height: $image-size * 2;
+        max-width: $image-size * 2;
         border-radius: 10rem;
+        object-fit: cover;
     }
     &__name{
         padding-top: 2rem;
@@ -31,7 +39,7 @@
         padding: .8rem 6rem;
     }
     button{
-        margin: 2rem;
+        margin: 4rem;
         font-family: inherit;
         font-size: 2rem;
         padding: 1rem;
@@ -44,6 +52,7 @@
             cursor: pointer;
             transform:translate(0,-.1rem);
         }
+
         &:active{
             box-shadow: none;
             transform:translate(0rem, .2rem);

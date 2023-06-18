@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import "./sign-in-popup.style.scss";
 import "../../firebase/firebase.utils";
 import { connect } from "react-redux";
 import { signInWithEmailAndPasswordAuthed } from "../../firebase/firebase.utils";
-import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { setCurrentUser } from "../../redux/user/user.actions";
-import { createStructuredSelector } from "reselect";
 
-const SignInPopup = ({ form, setForm, currentUser, setCurrentUser }) => {
+const SignInPopup = ({ form, setForm, setCurrentUser }) => {
+
+    const [message, setMessage] = useState("");
 
     const handleChange = (event) => {
+        setMessage("");
         const { name, value } = event.target;
         setForm({ ...form, [name]: value });
         console.log(form);
@@ -19,7 +20,7 @@ const SignInPopup = ({ form, setForm, currentUser, setCurrentUser }) => {
         event.preventDefault();
         signInWithEmailAndPasswordAuthed(form.identifiant, form.password)
             .then((cred) => { setCurrentUser(cred); window.location.href = '/workbranch'; })
-            .catch((err) => console.log(err.message));
+            .catch((err) => setMessage("email/mot de passe incorrecte"));
 
     }
 
@@ -32,7 +33,7 @@ const SignInPopup = ({ form, setForm, currentUser, setCurrentUser }) => {
             <input type="password" name="password" id="password" value={form.password} onChange={handleChange} />
             <input type="submit" value="Se connecter" />
             <div className="sign-in-popup__message">
-                this message  not be displayed
+                {message}
             </div>
             <div className="sign-in-popup__warning">
                 <span className="sign-in-popup__warning--danger">*</span>
@@ -43,13 +44,9 @@ const SignInPopup = ({ form, setForm, currentUser, setCurrentUser }) => {
     )
 }
 
-const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser
-})
-
 const mapDispatchToProps = dispatch => ({
     setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignInPopup);
+export default connect(null, mapDispatchToProps)(SignInPopup);
